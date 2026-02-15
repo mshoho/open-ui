@@ -35,8 +35,8 @@ Namely, one method called `document.advanceFocus()` and one event called `before
 ## Opting In
 
 Both `document.advanceFocus()` and the `beforefocus` event require explicit opt-in via a meta tag. 
-This design choice ensures backward compatibility and gives developers control over when to enable
-these new behaviors:
+This design choice ensures explicit developer intent and prevents the Universe from overheating
+by unnecessarily dispatching new events on every page:
 
 ```html
 <meta name="focus-navigation" content="advanceFocus beforefocus">
