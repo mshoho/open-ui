@@ -6,6 +6,10 @@ layout: ../../layouts/ComponentLayout.astro
 
 Authors: [Marat Abdullin](https://github.com/mshoho)
 
+{/* START doctoc generated TOC please keep comment here to allow auto update */}
+{/* DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE */}
+{/* END doctoc generated TOC please keep comment here to allow auto update */}
+
 ## Introduction
 
 Browsers include complex heuristics for determining the next element to focus, but these aren't
@@ -189,25 +193,18 @@ interface BeforefocusEvent extends UIEvent {
   cancelable: true;
   composed: true;         // Crosses shadow DOM boundaries
 }
-
-enum FocusType {
-  kScript = 1,    // element.focus() was called
-  kForward = 2,   // Tab key or advanceFocus() forward
-  kBackward = 3   // Shift+Tab or advanceFocus({ backward: true })
-}
 ```
 
 ### The `detail` Property
 
-The `detail` property indicates why the element is about to receive focus. The values correspond
-to the internal `FocusType` enum in the current Chromium implementation:
+The `detail` property indicates why the element is about to receive focus.
 
-> **Note:** These numeric values are currently taken directly from Chromium's internal `FocusType`
-> enum. The final standardized API may use different values, string constants, or a dedicated
-> property instead of `detail`. We most likely don't want to directly expose `0` when the focus is
-> moved by an assistive technology (like a screen reader). For the screen reader focus movements
-> we most likely want to send Forward/Backward value (depending on the relative position of a new
-> element comparing to the current one).
+> **Note:** The numeric values below are currently taken directly from Chromium's internal
+> `FocusType` enum. The final API should use different values, WebIDL enum, or a dedicated
+> property instead of `detail`. We most likely don't want to directly expose `0` when
+> the focus is moved by an assistive technology (like a screen reader). For the screen reader
+> focus movements we most likely want to send Forward/Backward value (depending on the relative
+> position of a new element comparing to the current one).
 
 | Value | Name | Triggered By |
 |-------|------|--------------|
