@@ -73,7 +73,7 @@ dictionary AdvanceFocusOptions {
   Element? startElement;
   Element? stayWithinElement;
   boolean backward = false;
-  boolean wrap = true;
+  boolean wrap = false;
   boolean includeStartElement = false;
 };
 
@@ -136,12 +136,12 @@ menus, focus traps in custom modal dialogs and similar UI patterns.
 Controls whether focus wraps around when reaching the boundaries.
 
 When `stayWithinElement` is specified:
-- `wrap: true` (default): Focus wraps from last element back to first (or vice versa for backward)
-- `wrap: false`: Focus stops at the boundary and `advanceFocus()` returns `false`
+- `wrap: true`: Focus wraps from last element back to first (or vice versa for backward)
+- `wrap: false` (default): Focus stops at the boundary and `advanceFocus()` returns `false`
 
 When `stayWithinElement` is not specified:
-- `wrap: true` (default): Focus wraps from the end of the page to the beginning
-- `wrap: false`: Focus can move to the browser's address bar (normal Tab behavior)
+- `wrap: true`: Focus wraps from the end of the page to the beginning
+- `wrap: false` (default): Focus can move to the browser's address bar (normal Tab behavior)
 
 ```js
 // Stop at boundaries instead of wrapping
