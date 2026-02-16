@@ -124,12 +124,12 @@ move outside of this element.
 
 ```js
 // Only navigate within a specific container
-const dialog = document.getElementById('my-dialog');
-document.advanceFocus({ stayWithinElement: dialog });
+const list = document.getElementById('my-list');
+document.advanceFocus({ stayWithinElement: list });
 ```
 
-This is useful for implementing focus traps in modal dialogs, custom dropdown menus, circular
-arrow-keys navigable lists and similar UI patterns.
+This is useful for implementing circular arrow keys navigable lists and tables, custom dropdown
+menus, focus traps in custom modal dialogs and similar UI patterns.
 
 #### `wrap`
 
