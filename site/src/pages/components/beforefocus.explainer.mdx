@@ -68,16 +68,18 @@ Without the meta tag:
 
 ### Signature
 
-```ts
-document.advanceFocus(options?: AdvanceFocusOptions): boolean
+```webidl
+dictionary AdvanceFocusOptions {
+  Element? startElement;
+  Element? stayWithinElement;
+  boolean backward = false;
+  boolean wrap = true;
+  boolean includeStartElement = false;
+};
 
-interface AdvanceFocusOptions {
-  startElement?: Element;        // Starting point for navigation (default: document.activeElement)
-  stayWithinElement?: Element;   // Constrains navigation to stay within this container
-  backward?: boolean;            // Navigate backward like Shift+Tab (default: false)
-  wrap?: boolean;                // Wrap around when reaching boundaries (default: true)
-  includeStartElement?: boolean; // Include startElement as a candidate (default: false)
-}
+partial interface Document {
+  boolean advanceFocus(optional AdvanceFocusOptions options = {});
+};
 ```
 
 ### Return Value
@@ -185,56 +187,60 @@ The `beforefocus` event is dispatched *before* the browser wants to focus an ele
 
 ### Event Properties
 
-```ts
-interface BeforefocusEvent extends UIEvent {
-  target: Element;        // The element about to receive focus
-  detail: FocusType;      // Numeric code indicating the reason for focus
-  bubbles: true;
-  cancelable: true;
-  composed: true;         // Crosses shadow DOM boundaries
-}
+```webidl
+enum FocusReason {
+  "page",
+  "script",
+  "forward",
+  "backward",
+  "ui"
+};
+
+interface BeforefocusEvent : UIEvent {
+  readonly attribute Element target;
+  readonly attribute FocusReason reason;
+};
 ```
 
-### The `detail` Property
+The event has the following characteristics:
+- `bubbles: true`
+- `cancelable: true`
+- `composed: true` (crosses shadow DOM boundaries)
 
-The `detail` property indicates why the element is about to receive focus.
+### The `reason` Property
 
-> **Note:** The numeric values below are currently taken directly from Chromium's internal
-> `FocusType` enum. The final API should use different values, WebIDL enum, or a dedicated
-> property instead of `detail`. We most likely don't want to directly expose `0` when
-> the focus is moved by an assistive technology (like a screen reader). For the screen reader
-> focus movements we most likely want to send Forward/Backward value (depending on the relative
-> position of a new element comparing to the current one).
+The `reason` property indicates why the element is about to receive focus:
 
-| Value | Name | Triggered By |
-|-------|------|--------------|
-| `0` | None | Catch-all (includes autofocus and accessibility-based focusing) |
-| `1` | Script | `element.focus()` |
-| `2` | Forward | `Tab` key, `advanceFocus()` |
-| `3` | Backward | `Shift+Tab`, `advanceFocus({ backward: true })` |
-| `4` | SpatialNavigation | Spatial navigation (TV/game controller interfaces) |
-| `5` | Mouse | Mouse click on a focusable element |
-| `6` | AccessKey | Access key activation (e.g., `Alt+Key` on Windows) |
+| Value | Triggered By |
+|-------|--------------|
+| `"page"` | The browser wants to move focus (e.g., `autofocus` attribute) |
+| `"script"` | Programmatic focus via `element.focus()` |
+| `"forward"` | `Tab` key or `advanceFocus()` |
+| `"backward"` | `Shift+Tab` or `advanceFocus({ backward: true })` |
+| `"ui"` | User interaction (mouse click, touch) on a focusable element |
+
+> **Note:** For screen reader focus movements, we most likely want to use `"forward"` or
+> `"backward"` value depending on the relative position of the new element compared to
+> the current one.
 
 ```js
 element.addEventListener('beforefocus', (event) => {
-  switch (event.detail) {
-    case 0: // None: autofocus, assistive technology
-      console.log('Focus via autofocus or other means');
+  switch (event.reason) {
+    case 'page':
+      console.log('Focus via autofocus');
       break;
-    case 1: // Script
+    case 'script':
       console.log('Focus via element.focus()');
       break;
-    case 2: // Forward
+    case 'forward':
       console.log('Tab pressed or advanceFocus() called');
       break;
-    case 3: // Backward
+    case 'backward':
       console.log('Shift+Tab pressed');
       break;
-    case 5: // Mouse
-      console.log('User clicked the element');
+    case 'ui':
+      console.log('User clicked or tapped the element');
       break;
-    // ... etc
   }
 });
 ```
