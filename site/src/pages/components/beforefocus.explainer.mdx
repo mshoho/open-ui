@@ -367,7 +367,7 @@ list.addEventListener('beforefocus', (event) => {
   const selectedItem = list.querySelector('[aria-selected="true"]');
 
   // When tabbing into the list from outside
-  if ((event.detail === 2 || event.detail === 3) &&  // Forward or backward navigation
+  if ((event.reason === 'forward' || event.reason === 'backward') &&
       !list.contains(document.activeElement) &&       // Coming from outside the list
       selectedItem &&
       !selectedItem.contains(event.target)) {         // Not already targeting selected item
@@ -416,7 +416,7 @@ const skipLink = document.getElementById('skip-to-main');
 const mainContent = document.getElementById('main');
 
 skipLink.addEventListener('beforefocus', (event) => {
-  if (event.detail === 2) { // Forward navigation only
+  if (event.reason === 'forward') {
     event.preventDefault();
 
     document.advanceFocus({
@@ -438,7 +438,7 @@ const entryItem = items[0]; // First item is the entry point
 
 toolbar.addEventListener('beforefocus', (event) => {
   // If navigating to a toolbar item that isn't the entry point
-  if ((event.detail === 2 || event.detail === 3) &&
+  if ((event.reason === 'forward' || event.reason === 'backward') &&
       event.target.classList.contains('toolbar-item') &&
       event.target !== entryItem) {
 
