@@ -196,7 +196,7 @@ enum FocusReason {
   "ui"
 };
 
-interface BeforefocusEvent : UIEvent {
+interface BeforeFocusEvent : UIEvent {
   readonly attribute Element target;
   readonly attribute FocusReason reason;
 };
